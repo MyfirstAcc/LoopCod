@@ -6,13 +6,13 @@ namespace LoopCode
 {
     class Program
     {
-       static void Main(string[] args)
+        static void Main(string[] args)
         {
             while (true)
             {
                 Console.Clear();
                 Console.WriteLine(" Циклический код(7,4) ");
-                Console.WriteLine(new string('-',25));
+                Console.WriteLine(new string('-', 25));
                 Console.WriteLine("Введите число, которое нужно передать: ");
                 var str = Console.ReadLine();
                 str = getStringBinary(str);
@@ -20,7 +20,7 @@ namespace LoopCode
 
                 LoopCode CyclicCode = new LoopCode(str);
                 var code = CyclicCode.encode();
-                
+
                 Console.WriteLine("Кодовое слово: {0}", code);
                 var temp = code.ToArray();
                 var randBit = Rabdomizer(0, 7);
@@ -43,26 +43,26 @@ namespace LoopCode
             }
         }
 
-        public static  int Rabdomizer(int start,int end)
+        public static int Rabdomizer(int start, int end)
         {
             Random rand = new Random();
             return rand.Next(start, end);
 
         }
-      
+
         static string getStringBinary(string str)
-        {            
-                int y = 0;
+        {
+            int y = 0;
 
-                int.TryParse(str, out y);
+            int.TryParse(str, out y);
 
-                var binarychar = Convert.ToString(y, 2).PadLeft(4, '0').ToArray();
-                return new string(binarychar);           
-            
+            var binarychar = Convert.ToString(y, 2).PadLeft(4, '0').ToArray();
+            return new string(binarychar);
+
         }
 
     }
-  
+
     public class LoopCode
     {
         /// <summary>
@@ -82,16 +82,16 @@ namespace LoopCode
         private string addThreeZero(string str)
         {
             if (str.Length == 4)
-            { 
+            {
                 return "000";
             }
-            else 
-            { 
-                return str; 
+            else
+            {
+                return str;
             }
         }
-       
-       
+
+
         public string Current
         {
             get
@@ -102,21 +102,21 @@ namespace LoopCode
             {
                 _str_cyclicCode = value;
             }
-        }      
+        }
         public string encode()
         {
             var tmp = division(_str_cyclicCode, _str_GPolinome);
-           _str_cyclicCode= _str_cyclicCode.Remove(_str_cyclicCode.Length-3, 3);
-            _str_cyclicCode += tmp;            
+            _str_cyclicCode = _str_cyclicCode.Remove(_str_cyclicCode.Length - 3, 3);
+            _str_cyclicCode += tmp;
             return _str_cyclicCode;
-        }       
-        private string division( string divident, string divisor)
-        {            
+        }
+        private string division(string divident, string divisor)
+        {
             //Деление 2 полиномов           
             var result = "";//резульятат деления, он нахуй никому не нужен хыыыы
             int part = divisor.Length;
             var tmp = divident.Substring(0, part);
-            
+
             while (part < divident.Length)
             {
                 if (tmp[0] == '1')
@@ -126,9 +126,9 @@ namespace LoopCode
                 }
                 else
                 {
-                    var t = help(part);                 
+                    var t = help(part);
                     tmp = xor(t, tmp) + divident[part];
-                    result+= "0";
+                    result += "0";
                 }
                 part++;
             }
@@ -141,15 +141,15 @@ namespace LoopCode
             {
                 var t = help(part);
                 tmp = xor(t, tmp);
-                result+= "0";            
+                result += "0";
             }
-           
+
             return tmp;
-            
-        }       
+
+        }
         public string decoding()
         {
-            var errorbit = division(_str_cyclicCode, _str_GPolinome);           
+            var errorbit = division(_str_cyclicCode, _str_GPolinome);
             if (errorbit == "000")
             {
                 return "Сообщение передано без ошибки!";
@@ -158,7 +158,7 @@ namespace LoopCode
             {
                 return errorbit;
             }
-            
+
         }
         private string help(int count)
         {
@@ -187,12 +187,12 @@ namespace LoopCode
             return res;
         }
         public string SerachErrors(string err)
-        {      
+        {
             //в узду эти матрицы :) 101=1;          
-            var syndrome = new List<string>(new string[] { "101", "111", "110", "011", "100", "010", "001" });            
+            var syndrome = new List<string>(new string[] { "101", "111", "110", "011", "100", "010", "001" });
             var t = syndrome.FindIndex(x => x == err);
-            Console.WriteLine("Произошла ошибка в {0} бите",t+1);
-            var charmm=_str_cyclicCode.ToArray();
+            Console.WriteLine("Произошла ошибка в {0} бите", t + 1);
+            var charmm = _str_cyclicCode.ToArray();
             if (charmm[t] == '1')
             {
                 charmm[t] = '0';
@@ -203,10 +203,10 @@ namespace LoopCode
             }
             _str_cyclicCode = new string(charmm);
             Show(t);
-           
+
             return _str_cyclicCode;
 
-            
+
         }
 
 
@@ -215,8 +215,8 @@ namespace LoopCode
 
             var r = _str_cyclicCode.Remove(4);
             var dec = Convert.ToInt32(r, 2);
-            Console.WriteLine(new string('-',25));
-            Console.WriteLine("\nПередаваемое число - {0}",dec);
+            Console.WriteLine(new string('-', 25));
+            Console.WriteLine("\nПередаваемое число - {0}", dec);
 
         }
         private void Show(int ind)
@@ -238,5 +238,5 @@ namespace LoopCode
         }
     }
 
-   
+
 }
